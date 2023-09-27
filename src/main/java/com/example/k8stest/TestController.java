@@ -16,16 +16,17 @@ import java.util.Arrays;
 class TestController {
     @Value("${my.property}")
     private String prop;
-
-    private final TestService testService;
-
-    TestController(TestService testService) {
-        this.testService = testService;
-    }
+    @Value("${info.app.version:unknown}")
+    private String version;
 
 
     @GetMapping("/")
     public String hello() {
+        return version;
+    }
+
+    @GetMapping("/heavy")
+    public String heavyCompute() {
         return Arrays.toString(
                 hashPassword(Instant.now().toString().toCharArray(),
                         "salt".getBytes(),
@@ -39,8 +40,7 @@ class TestController {
             SecretKeyFactory skf = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA512");
             PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, keyLength);
             SecretKey key = skf.generateSecret(spec);
-            byte[] res = key.getEncoded();
-            return res;
+            return key.getEncoded();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
             throw new RuntimeException(e);
         }

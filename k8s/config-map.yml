@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: k8s-test-config-map
 data:
-  my_prop: changed
+  my_prop: '27.9 15:03'
